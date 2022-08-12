@@ -3,7 +3,6 @@ Vector::Vector ()
     _size = 0;
     _capacity = 1;
     _arr = new int [_capacity];
-    _index = _arr;
 }
 
 Vector::Vector (int capacity)
@@ -13,7 +12,6 @@ Vector::Vector (int capacity)
         _capacity = capacity;
         _size = 0;
         _arr = new int [_capacity];
-        _index = _arr;
     }
     else
     {
@@ -28,7 +26,6 @@ Vector::Vector (int capacity, int value)
         _capacity = capacity;
         _size = capacity;
         _arr = new int [_capacity];
-        _index = _arr;
 
         for (int i = 0; i < _size; ++i)
         {
@@ -37,7 +34,7 @@ Vector::Vector (int capacity, int value)
     }
     else
     {
-        std::cout << "undefined behaifor\n";
+        std::cout << "undefined behaivor\n";
     }
 }
 
@@ -51,7 +48,6 @@ Vector::Vector (const Vector& ob)
     _size = ob._size;
     _capacity = ob._capacity;
     _arr = new int [_capacity];
-    _index = _arr;
     for(int i = 0; i < _size; ++i)
     {
         _arr[i] = ob._arr[i];
@@ -64,25 +60,11 @@ Vector& Vector::operator = (const Vector& rhs)
     _capacity = rhs._capacity;
     delete[] _arr;
     _arr = new int (_capacity);
-    _index = _arr;
     for (int i = 0; i < _size; ++i)
     {
         _arr[i] = rhs._arr[i];
     }
     return *this;
-}
-
-Vector::Vector (Vector&& mob)
-{
-    _size = mob._size;
-    _capacity = mob._capacity;
-    _arr = mob._arr;
-    _index = _arr;
-    
-    mob._size = 0;
-    mob._capacity = 0;
-    mob._arr = nullptr;
-    
 }
 
 Vector Vector::operator + (const Vector& rhs)
@@ -128,7 +110,6 @@ Vector& Vector::operator += (const Vector& rhs)
     _capacity = tmp._capacity;
     delete[] _arr;
     _arr = new int (_capacity);
-    _index = _arr;
     for (int i = 0; i < _size; ++i)
     {
         _arr[i] = tmp._arr[i];
@@ -136,23 +117,14 @@ Vector& Vector::operator += (const Vector& rhs)
     return *this;
 }
 
-int Vector::operator ++ ()
-{
-    _index += 1;
-    return *_index;
-
-}
-
 int& Vector::operator [] (size_t index)
 {
+    if (index < 0 || index > _size)
+    {
+        std::cout << "Segmentation fault\n";
+        return -1;
+    }
     return _arr[index];
-}
-
-const int Vector::operator ++ (int zero)
-{
-    const int tmp = *_index;
-    _index += 1;
-    return tmp;
 }
 
 std::ostream& operator << (std::ostream& os, const Vector& v)
@@ -179,7 +151,6 @@ void Vector::push_back (int elem)
         }
         delete[] _arr;
         _arr = tmp;
-        _index = _arr;
     }
     _arr[_size++] = elem;
 }
@@ -193,13 +164,6 @@ void Vector::pop_back ()
     }
 }
 
-void Vector::print ()
-{
-    for (int i = 0; i < _size; ++i)
-    {
-        std::cout << _arr[i] << ' ';
-    }
-}
 int Vector::size ()
 {
     return _size;
@@ -235,7 +199,6 @@ void Vector :: insert (int index, int value)
     delete[] _arr;
     _arr = tmp;
     ++_size;
-    _index = _arr;
 }
 
 std::string Vector :: find_by_value (int value)
@@ -280,7 +243,6 @@ void Vector :: remove_by_value (int value)
     }
     delete[] _arr;
     _arr = tmp;
-    _index = _arr;
     _size -= count_removed_value;
     tmp = nullptr;
 }
